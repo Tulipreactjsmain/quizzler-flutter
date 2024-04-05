@@ -1,6 +1,10 @@
+import 'package:flutter/material.dart';
+
 import "question.dart";
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class QuizBrain {
+  int _questionNumber = 0;
   List<Question> _questionBank = [
     Question('Some cats are actually allergic to humans', true),
     Question('You can lead a cow down stairs but not up stairs.', false),
@@ -29,11 +33,37 @@ class QuizBrain {
         true),
   ];
 
-  String getQuestionText(int questionNumber) {
-    return _questionBank[questionNumber].questionText;
+  void nextQuestion(BuildContext context, List scoreKeeper) {
+    if (_questionNumber < _questionBank.length - 1) {
+      _questionNumber++;
+    } else {
+      Alert(
+        context: context,
+        title: "Oops",
+        desc: "Game Over.",
+        buttons: [
+          DialogButton(
+            color: Colors.green,
+            child: Text(
+              "OK",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+          )
+        ],
+      ).show();
+      _questionNumber = 0;
+      scoreKeeper.clear();
+    }
+    ;
   }
 
-  bool getQuestionAnswer(int questionNumber) {
-    return _questionBank[questionNumber].questionAnswer;
+  String getQuestionText() {
+    return _questionBank[_questionNumber].questionText;
+  }
+
+  bool getQuestionAnswer() {
+    return _questionBank[_questionNumber].questionAnswer;
   }
 }
